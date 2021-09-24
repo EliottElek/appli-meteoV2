@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react";
+import WeatherView from "./components/WeatherView/WeatherView";
+
 const App = () => {
   const [weather, setWeather] = useState("");
   const [url, setUrl] = useState(
@@ -34,20 +36,13 @@ const App = () => {
         "&appid=e2bf6ec9c5eebca89cab32a152fa33e2"
     );
   };
-  if (!weather) {
-    return <div>chargement</div>;
-  }
+
 
   return (
-    <div>
-      <h1>{weather?.list[0]?.name}</h1>
-      <button
-        onClick={() => {
-          changeWeather();
-        }}
-      >
-        get weather where I am
-      </button>
+    <div className="mainAppContainer">
+      <div className="mainApp">
+        <WeatherView weather={weather} changeWeather={changeWeather} />
+      </div>
     </div>
   );
 };
