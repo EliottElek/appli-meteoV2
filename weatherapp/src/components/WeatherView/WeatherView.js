@@ -24,73 +24,97 @@ const WeatherView = () => {
     setRegion(event.target.value);
     setAround(false);
   };
-  console.log(weather);
   useEffect(() => {
     navigator.geolocation.getCurrentPosition((position) => {
       setLongitude(position.coords.longitude.toFixed(3));
       setLatitude(position.coords.latitude.toFixed(3));
     });
-    const setWeatherAround = () => {
-      setUrl(
-        `https://api.openweathermap.org/data/2.5/find?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER__API_KEY}`
-      );
-    };
     const fetchData = async () => {
       try {
+        updateData();
         const response = await fetch(url);
         const json = await response.json();
-        console.log("fetched");
+        console.log(json);
         setWeather(json);
       } catch (error) {
         console.log("error", error);
       }
     };
     const updateData = () => {
-      if (!around) {
+      if (around) {
+        setUrl(
+          `https://api.openweathermap.org/data/2.5/find?lat=${latitude}&lon=${longitude}&appid=${process.env.REACT_APP_WEATHER__API_KEY}`
+        );
+      } else {
         setUrl(
           `https://api.openweathermap.org/data/2.5/weather?q=${region}&appid=${process.env.REACT_APP_WEATHER__API_KEY}`
         );
-      } else {
-        setWeatherAround();
       }
     };
     fetchData();
-    updateData();
   }, [around, latitude, longitude, region, url]);
 
-  const displayInfos = (weather) => {
+  const displayByInput = () => {
     return (
       <>
-        {!around ? (
-          <div className="infosContainer">
-            <img
-              className="weather-icon"
-              alt={weather.weather[0].icon}
-              src={
-                "http://openweathermap.org/img/w/" +
-                weather.weather[0].icon +
-                ".png"
-              }
-            ></img>
-            <Typography variant="h5">{weather.name}</Typography>
-            <Typography variant="h3">
-              {(weather.main.temp - 273.15).toFixed(1)} °C
-            </Typography>
-            <Typography
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "center",
-              }}
-            >
-              <img className="wind-icon" alt={"wind"} src={wind}></img>:
-              {weather.wind.speed} mph
-            </Typography>
-          </div>
-        ) : (
-          <div></div>
-        )}
+        <div className="infosContainer">
+          <img
+            className="weather-icon"
+            alt={weather.weather[0].icon}
+            src={
+              "http://openweathermap.org/img/w/" +
+              weather.weather[0].icon +
+              ".png"
+            }
+          ></img>
+          <Typography variant="h5">{weather.name}</Typography>
+          <Typography variant="h3">
+            {(weather.main.temp - 273.15).toFixed(1)} °C
+          </Typography>
+          <Typography
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <img className="wind-icon" alt={"wind"} src={wind}></img>:
+            {weather.wind.speed} mph
+          </Typography>
+        </div>
+      </>
+    );
+  };
+  const displayByPosition = () => {
+    return (
+      <>
+        <div className="infosContainer">
+          <img
+            className="weather-icon"
+            alt={weather.list[0].weather[0].icon}
+            src={
+              "http://openweathermap.org/img/w/" +
+              weather.list[0].weather[0].icon +
+              ".png"
+            }
+          ></img>
+          <Typography variant="h5">{weather.list[0].name}</Typography>
+          <Typography variant="h3">
+            {(weather.list[0].main.temp - 273.15).toFixed(1)} °C
+          </Typography>
+          <Typography
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              justifyContent: "space-around",
+              alignItems: "center",
+            }}
+          >
+            <img className="wind-icon" alt={"wind"} src={wind}></img>:
+            {weather.list[0].wind.speed} mph
+          </Typography>
+        </div>
       </>
     );
   };
@@ -149,10 +173,18 @@ const WeatherView = () => {
   }
   return (
     <div className="panelContainer">
-      {weather.name !== undefined && displayInfos(weather)}
-      {weather.name === undefined && region !== "" && (
+      {weather && !around && weather.name !== undefined && displayByInput()}
+      {weather.list && around && weather.list[0].name !== undefined && displayByPosition()}
+
+
+      {! around && weather.name === undefined && region !== "" && (
         <Typography>
           Sorry... could not find any info on this region :(
+        </Typography>
+      )}
+       {around && weather === undefined && (
+        <Typography>
+          Sorry... Could not locate you accuratly...
         </Typography>
       )}
       {weather.name === undefined && region === "" && (
