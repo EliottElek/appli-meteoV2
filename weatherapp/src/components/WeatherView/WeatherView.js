@@ -11,7 +11,7 @@ const WeatherView = () => {
   const [region, setRegion] = useState("");
   const [weather, setWeather] = useState("");
   const [url, setUrl] = useState(
-    `http://api.openweathermap.org/data/2.5/find?lat=0&lon=0&appid=${process.env.REACT_APP_WEATHER__API_KEY}`
+    `https://api.openweathermap.org/data/2.5/find?lat=0&lon=0&appid=${process.env.REACT_APP_WEATHER__API_KEY}`
   );
   const [latitude, setLatitude] = useState(0);
   const [longitude, setLongitude] = useState(0);
@@ -62,7 +62,7 @@ const WeatherView = () => {
             className="weather-icon"
             alt={weather.weather[0].icon}
             src={
-              "http://openweathermap.org/img/w/" +
+              "https://openweathermap.org/img/w/" +
               weather.weather[0].icon +
               ".png"
             }
@@ -94,7 +94,7 @@ const WeatherView = () => {
             className="weather-icon"
             alt={weather.list[0].weather[0].icon}
             src={
-              "http://openweathermap.org/img/w/" +
+              "https://openweathermap.org/img/w/" +
               weather.list[0].weather[0].icon +
               ".png"
             }
