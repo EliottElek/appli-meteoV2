@@ -83,7 +83,7 @@ const WeatherView = () => {
                 ".png"
               }
             ></img>
-            <Typography variant="h5">{weather.name}</Typography>
+            <Typography variant="h5">{weather.name}, {weather.sys.country}</Typography>
             <Typography variant="h3">
               {(weather.main.temp - 273.15).toFixed(1)} °C
             </Typography>
@@ -184,7 +184,7 @@ const WeatherView = () => {
                 ".png"
               }
             ></img>
-            <Typography variant="h5">{weather.list[0].name}</Typography>
+            <Typography variant="h5">{weather.list[0].name}, {weather.list[0].sys.country}</Typography>
             <Typography variant="h3">
               {(weather.list[0].main.temp - 273.15).toFixed(1)} °C
             </Typography>
